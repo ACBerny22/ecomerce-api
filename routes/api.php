@@ -29,3 +29,4 @@ Route::post('/categories', [CategoryController::class, "createCategory"])->middl
 Route::get('/categories', [CategoryController::class, "fetchCategories"])->middleware('auth:sanctum');
 Route::get('/products', [ProductController::class, "fetchProducts"])->middleware('auth:sanctum');
 Route::post('/products', [ProductController::class, "createProduct"])->middleware('auth:sanctum');
+Route::delete('/products/{id}', [ProductController::class, "deleteProduct"])->middleware('auth:sanctum');

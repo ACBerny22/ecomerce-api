@@ -26,6 +26,6 @@ class Product extends Model
         "price",
         "stock",
         "category_id",
-        "image_url",
+        "image",
     ];
 }
