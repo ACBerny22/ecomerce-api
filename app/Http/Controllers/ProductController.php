@@ -45,7 +45,6 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'stock' => 'integer',
             'category_id' => 'required|integer',
-            'image' => 'nullable|image|mimes:jpeg,jpg,png,gif',
         ]);
 
         if ($validation->fails()) {
@@ -55,15 +54,7 @@ class ProductController extends Controller
             ], 400);
         }
 
-        $imagePath = $request->file('image')->store('products', 'public');
-        $rest = $request->except("image");
-
-        $payload = [
-            ...$rest,
-            "image" => $imagePath
-        ];
-
-        $product = Product::create($payload);
+        $product = Product::create($incommingFields);
 
         return response()->json([
             'status' => true,
@@ -71,9 +62,10 @@ class ProductController extends Controller
         ]);
     }
 
-    public function editProdcut(Request $request)
+    public function editProduct(Request $request)
     {
-        $validation = Validator::make($request->all(), [
+        $incommingFields = $request->all();
+        $validation = Validator::make($incommingFields, [
             'name' => 'required|string|unique:product,name',
             'description' => 'string',
             'price' => 'required|numeric',
@@ -98,6 +90,40 @@ class ProductController extends Controller
         }
 
         Product::where('id', $id)->delete();
+
+        return response()->json([
+            "status" => true,
+            "data" => $product
+        ]);
+    }
+
+    public function updateProductImage(Request $request)
+    {
+        $product = Product::find($request->id);
+        if (!$product) return response()->json([
+            "status" => false,
+            "error" => "El producto con el id " . $request->id . " no existe."
+        ]);
+
+        $validation = Validator::make($request->all(), [
+            'image' => 'required|image|mimes:jpeg,jpg,png,gif',
+        ]);
+
+        if ($validation->fails()) {
+            return response()->json([
+                "status" => false,
+                "error" => $validation->errors()
+            ], 400);
+        }
+
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
+        $imagePath = $request->file('image')->store('products', 'public');
+        $product->update([
+            "image" => $imagePath
+        ]);
 
         return response()->json([
             "status" => true,
