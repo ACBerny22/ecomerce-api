@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
@@ -36,3 +37,7 @@ Route::delete('/products/{id}', [ProductController::class, "deleteProduct"])->mi
 Route::post('/products/image/{id}', [ProductController::class, "updateProductImage"])->middleware('auth:sanctum');
 
 Route::get('/orders', [OrderController::class, "fetchOrders"])->middleware('auth:sanctum');
+
+Route::get('/cart', [CartItemController::class, "fetchCart"])->middleware('auth:sanctum');
+Route::post('/cart', [CartItemController::class, "createCartItem"])->middleware('auth:sanctum');
+Route::delete('/cart/{id}', [CartItemController::class, "deleteCartItem"])->middleware('auth:sanctum');
