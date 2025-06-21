@@ -3,10 +3,11 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CartItemController;
-use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderItemController;
 
 Route::post('/login', [AuthController::class, "login"]);
 Route::post('/register', [AuthController::class, "register"]);
@@ -37,6 +38,9 @@ Route::delete('/products/{id}', [ProductController::class, "deleteProduct"])->mi
 Route::post('/products/image/{id}', [ProductController::class, "updateProductImage"])->middleware('auth:sanctum');
 
 Route::get('/orders', [OrderController::class, "fetchOrders"])->middleware('auth:sanctum');
+Route::post('/orders', [OrderController::class, "createOrder"])->middleware('auth:sanctum');
+
+Route::post('/orders/items/{id}', [OrderItemController::class, "createOrderItems"])->middleware('auth:sanctum');
 
 Route::get('/cart', [CartItemController::class, "fetchCart"])->middleware('auth:sanctum');
 Route::post('/cart', [CartItemController::class, "createCartItem"])->middleware('auth:sanctum');
